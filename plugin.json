@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/refs/heads/master/server/utils/agents/imported-manifest.schema.json",
+  "active": true,
+  "hubId": "zifek-core",
+  "name": "Zifek Core — Consultation",
+  "schema": "skill-1.0.0",
+  "version": "1.3.0-safe.1",
+  "description": "Consulte les ressources réelles de Zifek Core (produits, services, hébergements, événements, médias, ZCalendar), en lecture seule. Interdit les modifications, réservations et achats.",
+  "author": "Zifek",
+  "license": "proprietary",
+  "imported": true,
+  "setup_args": {
+    "ZIFEK_AGENT_TOKEN": {
+      "type": "string",
+      "required": false,
+      "input": {
+        "type": "password",
+        "placeholder": "zfa_...",
+        "hint": "Jeton Zifek dédié à la consultation. Préférer une variable d’environnement sur le serveur; ne jamais utiliser un jeton d’écriture ou d’un autre compte."
+      }
+    }
+  },
+  "examples": [
+    {
+      "prompt": "Recherche des produits artisanaux à Fès avec leurs images",
+      "call": "{\"tool\": \"search_zifek_resources\", \"params_json\": \"{\\\"query\\\":\\\"artisanat\\\",\\\"city\\\":\\\"Fes\\\",\\\"limit\\\":5,\\\"resource_type\\\":\\\"product\\\"}\"}"
+    },
+    {
+      "prompt": "Montre toutes les photos et vidéos de Villa MIRAGE, hébergement 35",
+      "call": "{\"tool\": \"get_zifek_resource_media\", \"params_json\": \"{\\\"resource_type\\\":\\\"accommodation\\\",\\\"resource_id\\\":35,\\\"limit\\\":10,\\\"offset\\\":0}\"}"
+    },
+    {
+      "prompt": "Quels créneaux sont disponibles pour le service 42 ?",
+      "call": "{\"tool\": \"get_zcalendar_available_slots\", \"params_json\": \"{\\\"resource_type\\\":\\\"service\\\",\\\"resource_id\\\":42,\\\"date_from\\\":\\\"2026-11-10\\\",\\\"date_to\\\":\\\"2026-11-10\\\",\\\"party_size\\\":1}\"}"
+    }
+  ],
+  "entrypoint": {
+    "file": "handler.js",
+    "params": {
+      "tool": {
+        "type": "string",
+        "description": "Nom exact d’un outil de consultation Zifek Core autorisé. Exemple search_zifek_resources, get_zifek_resource_media, get_zcalendar_available_slots."
+      },
+      "params_json": {
+        "type": "string",
+        "description": "Objet JSON des paramètres de cet outil, sérialisé en chaîne ; ex. {\"city\":\"Fes\",\"resource_type\":\"product\",\"limit\":5}. Ne jamais inclure user_id ou un secret."
+      }
+    }
+  }
+}
